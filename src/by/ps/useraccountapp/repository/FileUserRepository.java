@@ -9,6 +9,7 @@ import java.util.List;
 public class FileUserRepository implements UserRepository{
 
     private static final String PATH = "users.bin";
+
     @Override
     public void addUser(User user) {
 
