@@ -1,12 +1,17 @@
 package by.ps.useraccountapp.application.util;
 
+import by.ps.useraccountapp.application.config.AppConfig;
+import by.ps.useraccountapp.exception.ValidationException;
+
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
 
 public class UserInputReader {
 
-    private static Scanner scanner = new Scanner(System.in);
+    private static Scanner scanner = new Scanner(System.in).useDelimiter("\n");
+
+    private static Validator validator = AppConfig.getValidator();
 
     public static int getInt() {
 
@@ -20,28 +25,50 @@ public class UserInputReader {
         return getInt();
     }
 
-    public static String getString() {
-        return scanner.next();
-    }
+    public static String getValidString(String pattern, String errorMessage) {
 
-    public static Set<String> getStringSet() {
+        String value = scanner.next();
 
-        Set<String> stringSet = new HashSet<>();
-
-        System.out.println("Enter values [0 - exit]");
-
-        while (true) {
-
-            if (scanner.hasNextInt()) {
-                int intValue = scanner.nextInt();
-                if (intValue == 0) break;
+        try {
+            if (validator.validateString(value, pattern, errorMessage)) {
+                return value;
             }
-
-            String stringValue = getString();
-
-            stringSet.add(stringValue);
+        } catch (ValidationException e) {
+            System.out.println(e.getMessage());
         }
 
-        return stringSet;
+        return getValidString(pattern, errorMessage);
+    }
+
+    public static Set<String> getValidSet(String pattern, String errorMessage) {
+
+        Set<String> values = new HashSet<>();
+
+        while (!exitCondition()) {
+
+            String validValue = getValidString(pattern, errorMessage);
+            values.add(validValue);
+        }
+
+        try {
+            if (validator.validateSet(values, pattern)) {
+                return values;
+            }
+        } catch (ValidationException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return getValidSet(pattern, errorMessage);
+    }
+
+    private static boolean exitCondition() {
+
+        if (scanner.hasNextInt()) {
+            if (scanner.nextInt() == 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

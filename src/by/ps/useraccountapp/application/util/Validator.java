@@ -6,9 +6,7 @@ import java.util.Set;
 
 public interface Validator {
 
-    boolean isSetSizeValid(Set<String> values) throws ValidationException;
+    boolean validateString(String value, String pattern, String error) throws ValidationException;
 
-    boolean isPhoneNumberValid(String phoneNumber) throws ValidationException;
-
-    boolean isEmailValid(String email) throws ValidationException;
+    boolean validateSet(Set<String> values, String pattern) throws ValidationException;
 }
