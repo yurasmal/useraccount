@@ -44,7 +44,11 @@ public class UserInputReader {
 
         Set<String> values = new HashSet<>();
 
-        while (!exitCondition()) {
+        while (true) {
+
+            if (exitCondition()) {
+                break;
+            }
 
             String validValue = getValidString(pattern, errorMessage);
             values.add(validValue);

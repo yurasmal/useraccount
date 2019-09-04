@@ -3,16 +3,12 @@ package by.ps.useraccountapp.application.action;
 import by.ps.useraccountapp.application.util.UserInputMessage;
 import by.ps.useraccountapp.entity.User;
 
+import java.util.List;
 import java.util.Set;
 
 public class AddUserAction extends BaseAction implements Action {
 
     private static final String ACTION_NAME = properties.getProperty("add");
-    private static final String EMAIL_PATTERN = properties.getProperty("pattern.email");
-    private static final String PHONE_NUMBER_PATTERN = properties.getProperty("pattern.phone");
-    private static final String ALL_PATTERN = properties.getProperty("pattern.all");
-    private static final String EMAIL_ERROR = properties.getProperty("email.error");
-    private static final String PHONE_ERROR = properties.getProperty("phone.error");
 
     @Override
     public String getActionName() {
@@ -24,7 +20,7 @@ public class AddUserAction extends BaseAction implements Action {
 
         System.out.println("-----" + ACTION_NAME + "-----");
 
-        int id = getIntegerValue(UserInputMessage.ID_MESSAGE.toString());
+        int id = getValidId();
 
         String firstName = getValidString(UserInputMessage.FIRST_NAME_MESSAGE.toString(),
                                             ALL_PATTERN, null);
@@ -46,4 +42,26 @@ public class AddUserAction extends BaseAction implements Action {
         userService.saveUser(user);
     }
 
+    private int getValidId() {
+
+        boolean flag = false;
+
+        List<User> users = userService.findAll();
+
+        int id = getIntegerValue(UserInputMessage.ID_MESSAGE.toString());
+
+        for (User user : users) {
+
+            if (user.getId() == id) {
+                System.out.println("User with ID = " + id + " already exist!");
+                flag = true;
+            }
+        }
+
+        if (!flag) {
+            return id;
+        }
+
+        return getValidId();
+    }
 }

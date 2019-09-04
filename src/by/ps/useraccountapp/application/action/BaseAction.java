@@ -9,9 +9,15 @@ import java.util.Set;
 
 public class BaseAction {
 
+    protected static Properties properties = AppConfig.getProperties();
+
     protected UserService userService = AppConfig.getUserService();
 
-    protected static Properties properties = AppConfig.getProperties();
+    protected final String EMAIL_PATTERN = properties.getProperty("pattern.email");
+    protected final String PHONE_NUMBER_PATTERN = properties.getProperty("pattern.phone");
+    protected final String ALL_PATTERN = properties.getProperty("pattern.all");
+    protected final String EMAIL_ERROR = properties.getProperty("email.error");
+    protected final String PHONE_ERROR = properties.getProperty("phone.error");
 
     protected int getIntegerValue(String message) {
         System.out.println(message);

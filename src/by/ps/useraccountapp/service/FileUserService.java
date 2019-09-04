@@ -33,6 +33,11 @@ public class FileUserService implements UserService{
 
     @Override
     public void updateUser(User user) {
+        
+        if (userRepository.findById(user.getId()) != null) {
+            
+            userRepository.removeUser(user);
+        }
 
         userRepository.addUser(user);
     }
